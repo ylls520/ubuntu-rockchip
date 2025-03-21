@@ -1,4 +1,4 @@
-name: Build-UBoot
+name: Build-Uboot
 
 on:
   workflow_dispatch:
@@ -6,13 +6,14 @@ on:
 run-name: Build
 
 jobs:
-  kernel:
-    runs-on: ubuntu-latest
-    name: Build kernel 
+  uboot:
+    runs-on: ubuntu-22.04
+    name: Build uboot 
     strategy:
         matrix:
-          suite:
-            - noble
+          board:
+            - aio-3588l
+            - armsom-aim7
     steps:
       - name: Get more disk space
         uses: jlumbroso/free-disk-space@main
@@ -44,7 +45,7 @@ jobs:
 
       - name: Build
         shell: bash
-        run: sudo ./build.sh --suite=${{ matrix.suite }} --uboot-only
+        run: sudo ./build.sh --board=${{ matrix.board }} --uboot-only
 
       - name: Upload
         uses: actions/upload-artifact@v4.3.3
