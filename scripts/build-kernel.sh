@@ -27,6 +27,9 @@ fi
 cd linux-rockchip
 git checkout "${KERNEL_BRANCH}"
 
+#
+sed -i 's/ap6275p/ap6276p/g' debian.rockchip/config/config.common.ubuntu
+
 # shellcheck disable=SC2046
 export $(dpkg-architecture -aarm64)
 export CROSS_COMPILE=aarch64-linux-gnu-
