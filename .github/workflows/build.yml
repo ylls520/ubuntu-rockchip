@@ -111,7 +111,7 @@ jobs:
     strategy:
       matrix:
         board:
-          - armsom-aim7
+          - smart-am60
         flavor:
           - desktop
           - server
