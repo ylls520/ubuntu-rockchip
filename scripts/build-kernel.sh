@@ -29,6 +29,8 @@ git checkout "${KERNEL_BRANCH}"
 
 #
 sed -i 's/ap6275p/ap6276p/g' debian.rockchip/config/config.common.ubuntu
+cp ../overlay/kernel/rk3588-smart-am60.dts arch/arm64/boot/dts/rockchip/
+echo 'dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3588-smart-am60.dtb' >> arch/arm64/boot/dts/rockchip/Makefile
 
 # shellcheck disable=SC2046
 export $(dpkg-architecture -aarm64)
