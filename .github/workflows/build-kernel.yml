@@ -12,6 +12,7 @@ jobs:
     strategy:
         matrix:
           suite:
+            - jammy
             - noble
     steps:
       - name: Get more disk space
