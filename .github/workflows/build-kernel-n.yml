@@ -51,26 +51,14 @@ jobs:
           repository: Joshua-Riek/linux-rockchip
           ref: noble
           path: joshua-repo
-          
-      - name: Merge files
-        run: |
-          mkdir temp
-          cp -rvf joshua-repo/debian* temp/
-          tar -zcvf joshua-debian.tar.gz temp/
-          
-      - name: Upload
-        uses: actions/upload-artifact@v4.3.3
-        with:
-            name: joshua-debian.tar.gz
-            path: ./temp/joshua-debian.tar.gz
-            if-no-files-found: error
 
       - name: Merge files
         run: |
-          cp -rvf joshua-repo/debian* armbian-repo/
+          rm -rf joshua-repo/drivers/rknpu
+          cp -rvf armbian-repo/drivers/rknpu joshua-repo/drivers/
 
       - name: Build kernel
-        working-directory: ./armbian-repo
+        working-directory: ./joshua-repo
         run: |
           export $(dpkg-architecture -aarm64)
           export CROSS_COMPILE=aarch64-linux-gnu-
