@@ -1,0 +1,73 @@
+name: Build-Kernel-N
+
+on:
+  workflow_dispatch:
+
+run-name: Build kernel
+
+jobs:
+  kernel:
+    runs-on: ubuntu-22.04
+    name: Build kernel 
+    steps:
+      - name: Get more disk space
+        uses: jlumbroso/free-disk-space@main
+        with:
+          tool-cache: false
+          android: true
+          dotnet: true
+          haskell: true
+          large-packages: true
+          swap-storage: true
+
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Checkout LFS
+        shell: bash
+        run: git lfs fetch && git lfs checkout
+
+      - name: Install dependencies
+        shell: bash
+        run: |
+          sudo apt-get update && apt-get purge needrestart -y && sudo apt-get upgrade -y
+          sudo apt-get install -y build-essential gcc-aarch64-linux-gnu bison \
+          qemu-user-static qemu-system-arm qemu-efi u-boot-tools binfmt-support \
+          debootstrap flex libssl-dev bc rsync kmod cpio xz-utils fakeroot parted \
+          udev dosfstools uuid-runtime git-lfs device-tree-compiler python2 python3 \
+          python-is-python3 fdisk bc debhelper python3-pyelftools python3-setuptools \
+          python3-distutils python3-pkg-resources swig libfdt-dev libpython3-dev
+
+      - name: Checkout Armbian repo
+        uses: actions/checkout@v4
+        with:
+          repository: armbian/linux-rockchip
+          ref: rk-6.1-rkr5
+          path: armbian-repo
+
+      - name: Checkout Joshua-Riek repo
+        uses: actions/checkout@v4
+        with:
+          repository: Joshua-Riek/linux-rockchip
+          ref: noble
+          path: joshua-repo
+
+      - name: Merge files
+        run: |
+          cp -rvf joshua-repo/debian* armbian-repo/
+
+      - name: Build kernel
+        working-directory: ./armbian-repo
+        run: |
+          export $(dpkg-architecture -aarm64)
+          export CROSS_COMPILE=aarch64-linux-gnu-
+          export CC=aarch64-linux-gnu-gcc
+          export LANG=C
+          fakeroot debian/rules clean binary-headers binary-rockchip do_mainline_build=true
+
+      - name: Upload
+        uses: actions/upload-artifact@v4.3.3
+        with:
+            name: linux-rockchip-${{ matrix.suite == 'jammy' && '5.10' || matrix.suite == 'noble' && '6.1' }}
+            path: ./build/linux-*.deb
+            if-no-files-found: error
