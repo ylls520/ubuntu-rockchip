@@ -69,6 +69,6 @@ jobs:
       - name: Upload
         uses: actions/upload-artifact@v4.3.3
         with:
-            name: linux-rockchip-${{ matrix.suite == 'jammy' && '5.10' || matrix.suite == 'noble' && '6.1' }}
-            path: ./build/linux-*.deb
+            name: linux-rockchip-6.1
+            path: ./armbian-repo/build/linux-*.deb
             if-no-files-found: error
