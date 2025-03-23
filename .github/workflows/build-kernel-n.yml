@@ -51,11 +51,23 @@ jobs:
           repository: Joshua-Riek/linux-rockchip
           ref: noble
           path: joshua-repo
+          
+      - name: Merge files
+        run: |
+          mkdir temp
+          cp -rvf joshua-repo/debian* temp/
+          tar -zcvf joshua-debian.tar.gz temp/
+          
+      - name: Upload
+        uses: actions/upload-artifact@v4.3.3
+        with:
+            name: joshua-debian.tar.gz
+            path: ./temp/joshua-debian.tar.gz
+            if-no-files-found: error
 
       - name: Merge files
         run: |
           cp -rvf joshua-repo/debian* armbian-repo/
-          cp -rvf joshua-repo/Makefile armbian-repo/Makefile
 
       - name: Build kernel
         working-directory: ./armbian-repo
