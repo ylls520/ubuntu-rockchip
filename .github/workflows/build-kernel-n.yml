@@ -21,7 +21,7 @@ jobs:
       - name: Merge files
         run: |
           mkdir temp
-          cp -rvf armbian-repo/debian* temp/
+          cp -rvf joshua-repo/debian* temp/
           tar -zcvf debian.tar.gz temp/
 
       - name: Upload
