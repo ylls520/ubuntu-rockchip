@@ -55,6 +55,7 @@ jobs:
       - name: Merge files
         run: |
           cp -rvf joshua-repo/debian* armbian-repo/
+          cp -rvf joshua-repo/Makefile armbian-repo/Makefile
 
       - name: Build kernel
         working-directory: ./armbian-repo
