@@ -34,6 +34,12 @@ jobs:
         shell: bash
         run: git lfs fetch && git lfs checkout
 
+        
+      - name: Chmod
+        shell: bash
+        run: |
+          sudo chmod -R +x .
+
       - name: Install dependencies
         shell: bash
         run: |
