@@ -155,3 +155,6 @@ cp -a chroot/* mnt/
 sync && umount mnt
 rm -rf mnt
 
+# 压缩镜像
+echo "Compressing the ext4 image..."
+xz -3 -T0 "../ubuntu-${RELASE_VERSION}-preinstalled-${FLAVOR}-arm64.img"
