@@ -74,6 +74,10 @@ while [ "$#" -gt 0 ]; do
             export ROOTFS_ONLY=Y
             shift
             ;;
+        -rio|--rootfs-img-only)
+            export ROOTFS_IMG_ONLY=Y
+            shift
+            ;;
         -l|--launchpad)
             export LAUNCHPAD=Y
             shift
@@ -184,6 +188,15 @@ if [ "${ROOTFS_ONLY}" == "Y" ]; then
         exit 1
     fi
     ./scripts/build-rootfs.sh
+    exit 0
+fi
+
+if [ "${ROOTFS_IMG_ONLY}" == "Y" ]; then
+    if [ -z "${SUITE}" ] || [ -z "${FLAVOR}" ]; then
+        usage
+        exit 1
+    fi
+    ./scripts/build-rootfs-img.sh
     exit 0
 fi
 
